@@ -57,11 +57,11 @@ class Cryptocurrency extends AbstractModel
     }
 
     /**
-     * Get formatted name attribute.
+     * Flush CoinGecko cache data.
      */
-    public function getFormattedNameAttribute(): string
+    public function flushCoingeckoData(): bool
     {
-        return Str::headline($this->name);
+        return CoinGecko::flushAssetInformation($this->coingecko_id);
     }
 
     /**
@@ -69,7 +69,23 @@ class Cryptocurrency extends AbstractModel
      */
     public function getCoingeckoAttribute(): ?object
     {
-        return CoinGecko::getAssetInformation($this->cg_id ?? $this->name);
+        return CoinGecko::getAssetInformation($this->coingecko_id);
+    }
+
+    /**
+     * Get CoinGecko Id attribute.
+     */
+    public function getCoingeckoIdAttribute(): string
+    {
+        return $this->cg_id ?? $this->name;
+    }
+
+    /**
+     * Get formatted name attribute.
+     */
+    public function getFormattedNameAttribute(): string
+    {
+        return Str::headline($this->name);
     }
 
     /**
