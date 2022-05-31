@@ -1,0 +1,27 @@
+{
+    "name": "cryptounifier/cryptocurrency",
+    "description": "Cryptocurrency config file helper and CoinGecko helper class. Internal usage.",
+    "keywords": ["laravel", "cryptocurrency", "abstract-model", "coingecko"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "cryptounifier",
+            "email": "contact@cryptounifier.io"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^9.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "CryptoUnifier\\Cryptocurrency\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
