@@ -49,6 +49,14 @@ class Cryptocurrency extends AbstractModel
     }
 
     /**
+     * Set currency value.
+     */
+    public function setCurrency(string $value): void
+    {
+        $this->currency = Str::lower($value);
+    }
+
+    /**
      * Get formatted name attribute.
      */
     public function getFormattedNameAttribute(): string
