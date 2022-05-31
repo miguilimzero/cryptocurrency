@@ -105,9 +105,9 @@ class Cryptocurrency extends AbstractModel
     }
 
     /**
-     * Get 30 days variation attribute.
+     * Get percentage 30 days variation attribute.
      */
-    public function get30dVariationAttribute(): ?float
+    public function getPercentage30dVariationAttribute(): ?float
     {
         return $this->coingecko->price_change_percentage_30d ?? 0;
     }
