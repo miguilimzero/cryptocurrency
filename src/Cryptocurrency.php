@@ -33,7 +33,7 @@ class Cryptocurrency extends AbstractModel
     {
         return collect(config('custom.cryptocurrencies'))->map(
             fn ($attributes, $symbol) => new static(array_merge(['symbol' => $symbol], $attributes))
-        )->values()->sortKeys();
+        )->sortKeys()->values();
     }
 
     /**
