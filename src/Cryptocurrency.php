@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
-class Cryptocurrency extends AbstractModel
+abstract class Cryptocurrency extends AbstractModel
 {
     /**
      * Fiat currency for conversion
@@ -29,7 +29,7 @@ class Cryptocurrency extends AbstractModel
      *
      * @return Collection<int, static>
      */
-    public static function all(): Collection
+    final public static function all(): Collection
     {
         return collect(config('custom.cryptocurrencies'))->map(
             fn ($attributes, $symbol) => new static(array_merge(['symbol' => $symbol], $attributes))
@@ -39,7 +39,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get cryptocurrency instance.
      */
-    public static function find(string $key): static
+    final public static function find(string $key): static
     {
         $attributes = config("custom.cryptocurrencies.{$key}");
 
@@ -53,7 +53,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Set currency value.
      */
-    public function setCurrency(string $value): void
+    final public function setCurrency(string $value): void
     {
         $this->currency = Str::lower($value);
     }
@@ -61,7 +61,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Flush CoinGecko cache data.
      */
-    public function flushCoingeckoData(): bool
+    final public function flushCoingeckoData(): bool
     {
         return CoinGecko::flushAssetInformation($this->coingecko_id);
     }
@@ -69,7 +69,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get CoinGecko attribute.
      */
-    public function getCoingeckoAttribute(): ?object
+    final public function getCoingeckoAttribute(): ?object
     {
         return CoinGecko::getAssetInformation($this->coingecko_id);
     }
@@ -77,7 +77,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get CoinGecko Id attribute.
      */
-    public function getCoingeckoIdAttribute(): string
+    final public function getCoingeckoIdAttribute(): string
     {
         return $this->cg_id ?? $this->name;
     }
@@ -85,7 +85,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get formatted name attribute.
      */
-    public function getFormattedNameAttribute(): string
+    final public function getFormattedNameAttribute(): string
     {
         return Str::headline($this->name);
     }
@@ -93,7 +93,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get price attribute.
      */
-    public function getPriceAttribute(): float
+    final public function getPriceAttribute(): float
     {
         return $this->coingecko->current_price[$this->currency] ?? 0;
     }
@@ -101,7 +101,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get market cap attribute.
      */
-    public function geMarketCapAttribute(): float
+    final public function geMarketCapAttribute(): float
     {
         return $this->coingecko->market_cap[$this->currency] ?? 0;
     }
@@ -109,7 +109,7 @@ class Cryptocurrency extends AbstractModel
     /**
      * Get percentage 30 days variation attribute.
      */
-    public function getPercentage30dVariationAttribute(): ?float
+    final public function getPercentage30dVariationAttribute(): float
     {
         return $this->coingecko->price_change_percentage_30d ?? 0;
     }
