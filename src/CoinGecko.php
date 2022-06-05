@@ -34,17 +34,11 @@ class CoinGecko
      */
     public static function getAssetInformation(string $apiId): ?object
     {
-        $result = Cache::remember(
+        return Cache::remember(
             key: self::generateCacheHash($apiId),
             ttl: self::CACHE_TTL,
             callback: fn () => self::makeApiRequest($apiId)
         );
-
-        if ($result === null) {
-            Storage::append('coingecko-error.log', '[' . now()->toDateTimeString() . '] Null cached information for the following Api ID: ' . $apiId);
-        }
-
-        return $result;
     }
 
     /**
@@ -54,11 +48,15 @@ class CoinGecko
     {
         try {
             $result = Http::get(self::API_URL . "/coins/{$apiId}")->json();
-        } catch (RequestException) {
+        } catch (RequestException $e) {
+            self::addErrorLog($apiId, $e->getMessage());
+
             return null;
         }
 
         if (isset($result['error']) || ! isset($result['market_data'])) {
+            self::addErrorLog($apiId, $result['error'] ?? 'Unknown error and market cap not available');
+
             return null;
         }
 
@@ -71,5 +69,16 @@ class CoinGecko
     protected static function generateCacheHash(string $apiId): string
     {
         return md5("{$apiId}.cryptocurrency.coingecko");
+    }
+
+    /**
+     * Append error log to storage.
+     */
+    protected static function addErrorLog(string $apiId, string $message): bool
+    {
+        return Storage::append(
+            path: 'coingecko-error.log',
+            data: '[' . now()->toDateTimeString() . '] API ID: ' . $apiId . ' - ' . $message . '.'
+        );
     }
 }
