@@ -55,7 +55,7 @@ class CoinGecko
         }
 
         if (isset($result['error']) || ! isset($result['market_data'])) {
-            self::addErrorLog($apiId, $result['error'] ?? 'Unknown error and market cap not available');
+            self::addErrorLog($apiId, $result['error'] ?? 'Unknown error and market data not available');
 
             return null;
         }
