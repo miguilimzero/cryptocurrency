@@ -101,7 +101,7 @@ abstract class Cryptocurrency extends AbstractModel
     /**
      * Get market cap attribute.
      */
-    final public function geMarketCapAttribute(): float
+    final public function getMarketCapAttribute(): float
     {
         return $this->coingecko->market_cap[$this->currency] ?? 0;
     }
