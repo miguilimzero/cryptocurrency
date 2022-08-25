@@ -47,15 +47,15 @@ class CoinGecko
     protected static function makeApiRequest(string $apiId): ?object
     {
         try {
-            $result = Http::get(self::API_URL . "/coins/{$apiId}")->json();
+            $result = Http::retry(3)->get(self::API_URL . "/coins/{$apiId}")->json();
         } catch (RequestException $e) {
             self::addErrorLog($apiId, $e->getMessage());
 
             return null;
         }
 
-        if (isset($result['error']) || ! isset($result['market_data'])) {
-            self::addErrorLog($apiId, $result['error'] ?? 'Unknown error and market data not available');
+        if (isset($result['status']['error_message']) || ! isset($result['market_data'])) {
+            self::addErrorLog($apiId, $result['status']['error_message'] ?? 'Unknown error and market data not available');
 
             return null;
         }
