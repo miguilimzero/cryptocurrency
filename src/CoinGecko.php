@@ -32,11 +32,11 @@ class CoinGecko
     /**
      * Get asset information (From cache if available).
      */
-    public static function getAssetInformation(string $apiId): ?object
+    public static function getAssetInformation(string $apiId, bool $forceRefresh = false): ?object
     {
         $cache = Cache::get(self::generateCacheHash($apiId));
 
-        // Cache not available || (Invalid cache || Cache expired)
+        // Cache not available || (Force refresh || Invalid cache || Cache expired)
         if (! is_array($cache)) {
             $result = self::makeApiRequest($apiId);
 
@@ -44,7 +44,7 @@ class CoinGecko
                 apiId: $apiId,
                 result: $result
             );
-        } elseif (! is_object($cache[0]) || $cache[1] < time()) {
+        } elseif ($forceRefresh || ! is_object($cache[0]) || $cache[1] < time()) {
             $response = self::makeApiRequest($apiId);
 
             // Validate response. If invalid, re-save the cache
