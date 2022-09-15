@@ -36,7 +36,7 @@ class CoinGecko
     {
         $cache = Cache::get(self::generateCacheHash($apiId));
 
-        // Cache not available || Cache expired
+        // Cache not available || (Invalid cache || Cache expired)
         if (! is_array($cache)) {
             $result = self::makeApiRequest($apiId);
 
@@ -44,7 +44,7 @@ class CoinGecko
                 apiId: $apiId,
                 result: $result
             );
-        } elseif ($cache[1] < time()) {
+        } elseif (! is_object($cache[0]) || $cache[1] < time()) {
             $result = self::makeApiRequest($apiId);
 
             self::saveAssetInformationOnCache(
