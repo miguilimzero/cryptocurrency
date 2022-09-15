@@ -34,11 +34,28 @@ class CoinGecko
      */
     public static function getAssetInformation(string $apiId): ?object
     {
-        return Cache::remember(
-            key: self::generateCacheHash($apiId),
-            ttl: self::CACHE_TTL,
-            callback: fn () => self::makeApiRequest($apiId)
-        );
+        $cache = Cache::get(self::generateCacheHash($apiId));
+
+        // Cache not available || Cache expired
+        if (! is_array($cache)) {
+            $result = self::makeApiRequest($apiId);
+
+            self::saveAssetInformationOnCache(
+                apiId: $apiId,
+                result: $result
+            );
+        } elseif ($cache[1] < time()) {
+            $result = self::makeApiRequest($apiId);
+
+            self::saveAssetInformationOnCache(
+                apiId: $apiId,
+                result: (is_object($result)) ? $result : $cache[0]
+            );
+        } else {
+            $result = $cache[0];
+        }
+
+        return $result;
     }
 
     /**
@@ -68,7 +85,18 @@ class CoinGecko
      */
     protected static function generateCacheHash(string $apiId): string
     {
-        return md5("{$apiId}.cryptocurrency.coingecko");
+        return md5("{$apiId}.asset-information.coingecko");
+    }
+
+    /**
+     * Save/update asset information on cache.
+     */
+    protected static function saveAssetInformationOnCache(string $apiId, ?object $result): bool
+    {
+        return Cache::forever(
+            key: self::generateCacheHash($apiId),
+            value: [$result, time() + self::CACHE_TTL]
+        );
     }
 
     /**
