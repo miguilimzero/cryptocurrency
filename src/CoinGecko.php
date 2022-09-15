@@ -45,11 +45,16 @@ class CoinGecko
                 result: $result
             );
         } elseif (! is_object($cache[0]) || $cache[1] < time()) {
-            $result = self::makeApiRequest($apiId);
+            $response = self::makeApiRequest($apiId);
+
+            // Validate response. If invalid, re-save the cache
+            $result = (is_object($response))
+                ? $response
+                : $cache[0];
 
             self::saveAssetInformationOnCache(
                 apiId: $apiId,
-                result: (is_object($result)) ? $result : $cache[0]
+                result: $result,
             );
         } else {
             $result = $cache[0];

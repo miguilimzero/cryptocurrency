@@ -14,10 +14,15 @@ $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
 
 // setup cache
-$app->singleton('cache', function () {
+$app->singleton('cache', function ($app) {
     return new Illuminate\Cache\Repository(
-        new Illuminate\Cache\ArrayStore()
+        new Illuminate\Cache\FileStore(new Illuminate\Filesystem\Filesystem(), __DIR__ . '/cache')
     );
+});
+
+// setup filesystem
+$app->singleton('filesystem', function () {
+    return new Illuminate\Filesystem\Filesystem();
 });
 
 /**

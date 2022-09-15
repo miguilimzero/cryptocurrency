@@ -10,9 +10,9 @@ $asset = CoinGecko::getAssetInformation('bitcoin');
 var_dump($asset->last_updated);
 
 // Flush asset information
-CoinGecko::flushAssetInformation('bitcoin');
+// CoinGecko::flushAssetInformation('bitcoin');
 
-sleep(2);
+// sleep(2);
 
 // Get asset information again
 $asset = CoinGecko::getAssetInformation('bitcoin');
