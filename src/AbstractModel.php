@@ -16,6 +16,8 @@ abstract class AbstractModel implements Arrayable
     use HasRelationships;
     use HidesAttributes;
 
+    protected $exists = true;
+
     /**
      * Get all of the models from the abstract storage method.
      *

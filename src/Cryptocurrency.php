@@ -79,7 +79,7 @@ abstract class Cryptocurrency extends AbstractModel
      */
     final public function getCoingeckoIdAttribute(): string
     {
-        return $this->cg_id ?? $this->name;
+        return $this->getAttributeFromArray('cg_id') ?? $this->name;
     }
 
     /**
