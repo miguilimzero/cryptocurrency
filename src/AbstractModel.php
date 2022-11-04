@@ -18,6 +18,8 @@ abstract class AbstractModel implements Arrayable
 
     protected $exists = true;
 
+    protected $wasRecentlyCreated = true;
+
     /**
      * Get all of the models from the abstract storage method.
      *
